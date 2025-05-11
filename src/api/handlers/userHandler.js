@@ -1,7 +1,7 @@
-const User = require('../../models/User');
+const {User,DetailUser} = require('../../models');
 
 const getUsers = async (request, h) => {
-  const users = await User.findAll({ attributes: { exclude: ['password'] } });
+  const users = await User.findAll({ attributes: { exclude: ['password'] }, include: {model:DetailUser} });
   return { status: 'success', data: users };
 };
 

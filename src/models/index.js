@@ -1,8 +1,25 @@
-const { Sequelize } = require('sequelize');
+const UserField = require('./User');
+const DetailUserField = require('./DetailUser');
+const { db } = require('../config/database');
 
-const sequelize = new Sequelize('fix_point', 'root', 'root', {
-  host: 'localhost',
-  dialect: 'mysql'
+const User = db.define('users', UserField,{
+    tableName: 'users',
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
 });
 
-module.exports = { sequelize };
+const DetailUser = db.define('detail_users',DetailUserField, {
+    tableName: 'detail_users',
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+});
+
+User.hasOne(DetailUser, { foreignKey: 'userId' });
+DetailUser.hasOne(User, { foreignKey: 'id' });
+
+module.exports = {
+  User,
+  DetailUser
+};

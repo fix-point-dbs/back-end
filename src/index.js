@@ -1,9 +1,13 @@
 const createServer = require('./config/server');
-const { sequelize } = require('./models/index');
+const { db } = require('./config/database');
+const { User, DetailUser } = require('./models');
 const start = async () => {
   const server = await createServer();
 
-  await sequelize.sync();
+  (async () => {
+    await db.sync();
+    console.log('Database synced successfully');
+  })();
   await server.start();
   console.log(`Server berjalan di ${server.info.uri}`);
 };
