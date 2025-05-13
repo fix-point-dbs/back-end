@@ -1,12 +1,12 @@
-const { DataTypes } = require('sequelize');
+const {DataTypes} = require('sequelize');
 
-const Specialist = {
+const Service = {
     general_information_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    name: {
-        type: DataTypes.STRING,
+    type: {
+        type: DataTypes.ENUM('come workshop', 'visit', 'both'),
         allowNull: false
     },
     description: {
@@ -15,4 +15,4 @@ const Specialist = {
     }
 }
 
-module.exports = Specialist;
+module.exports = Service;

@@ -34,7 +34,7 @@ const GeneralInformation = {
         type: DataTypes.ENUM('workshop', 'towing'),
         allowNull: false
     },
-    type_vehicle: {
+    vehicle_type: {
         type: DataTypes.ENUM('car', 'motorcycle','truck'),
         allowNull: false
     },

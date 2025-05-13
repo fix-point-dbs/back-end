@@ -1,18 +1,22 @@
 const { DataTypes } = require('sequelize');
 
-const Specialist = {
+const Review = {
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     general_information_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    name: {
-        type: DataTypes.STRING,
+    rating: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
-    description: {
+    review: {
         type: DataTypes.TEXT,
         allowNull: false
     }
 }
 
-module.exports = Specialist;
+module.exports = Review;
