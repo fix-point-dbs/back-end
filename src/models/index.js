@@ -6,6 +6,9 @@ const ServiceField = require('./Service');
 const PhotoField = require('./Photo');
 const BookingField = require('./Booking');
 const ReviewField = require('./Review');
+const PersonalAccessTokenField = require('./PersonalAccessToken');
+const ChatField = require('./Chat');
+const MessageField = require('./Message');
 const { db } = require('../config/database');
 
 const User = db.define('users', UserField,{
@@ -64,6 +67,27 @@ const Review = db.define('reviews',ReviewField, {
     freezeTableName: true,
 });
 
+const PersonalAccessToken = db.define('personal_access_tokens',PersonalAccessTokenField, {
+    tableName: 'personal_access_tokens',
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+});
+
+const Chat = db.define('chats',ChatField, {
+    tableName: 'chats',
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+});
+
+const Message = db.define('messages',MessageField, {
+    tableName: 'messages',
+    timestamps: true,
+    underscored: true,
+    freezeTableName: true,
+});
+
 User.hasOne(DetailUser, { foreignKey: 'user_id' });
 DetailUser.hasOne(User, { foreignKey: 'id' });
 DetailUser.hasOne(GeneralInformation, { foreignKey: 'user_id' });
@@ -78,10 +102,36 @@ GeneralInformation.hasMany(Booking, { foreignKey: 'general_information_id' });
 Booking.belongsTo(GeneralInformation, { foreignKey: 'id' });
 GeneralInformation.hasMany(Review, { foreignKey: 'general_information_id' });
 Review.belongsTo(GeneralInformation, { foreignKey: 'id' });
+User.hasMany(PersonalAccessToken, { foreignKey: 'user_id' });
+PersonalAccessToken.belongsTo(User, { foreignKey: 'id' });
+// User.hasMany(Chat, { foreignKey: 'user_id' });
+// Chat.belongsTo(User, { foreignKey: 'id' });
+// Chat.hasMany(Message, { foreignKey: 'chat_id' });
+// Message.belongsTo(Chat, { foreignKey: 'id' });
+User.associate = (models) => {
+    User.hasMany(models.Chat, { foreignKey: 'mitra_id', as: 'mitraChats' });
+    User.hasMany(models.Chat, { foreignKey: 'user_id', as: 'userChats' });
+
+    User.hasMany(models.Message, { foreignKey: 'sender_id', as: 'sentMessages' });
+  };
+
+  Chat.associate = (models) => {
+    Chat.belongsTo(models.User, { foreignKey: 'mitra_id', as: 'mitra' });
+    Chat.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+
+    Chat.hasMany(models.Message, { foreignKey: 'chat_id', as: 'messages' });
+  };
 
 module.exports = {
   User,
   DetailUser,
   GeneralInformation,
-  Specialist
+  Specialist,
+  Service,
+  Photo,
+  Booking,
+  Review,
+  PersonalAccessToken,
+  Chat,
+  Message
 };
