@@ -1,5 +1,5 @@
 const { success } = require('../../utils/ApiResponser');
-const { getAll, getById, create } = require('../../services/serviceServices');
+const { getAll, getById, create, update, deleted } = require('../../services/serviceServices');
 const getServices = async (request, h) => {
     try {
         const response = await getAll();
@@ -47,10 +47,38 @@ const createService = async (request, h) => {
     }
 };
 
+const updateService = async (request, h) => {
+    try {
+        const { id } = request.params;
+        const response = await update(id, request.payload);
+        return h.response(success(response, 'success', 200)).code(200);
+    } catch (error) {
+        console.error(error);
+        return h.response({
+            status: 'error',
+            message: 'Internal Server Error'
+        }).code(500);
+    }
+};
+
+const deleteService = async (request, h) => {
+    try {
+        const { id } = request.params;
+        const response = await deleted(id);
+        return h.response(success(response, 'success', 200)).code(200);
+    } catch (error) {
+        console.error(error);
+        return h.response({
+            status: 'error',
+            message: 'Internal Server Error'
+        }).code(500);
+    }
+};
+
 module.exports = {
     getServices,
     getServiceById,
     createService,
-    // updateService,
-    // deleteService
+    updateService,
+    deleteService
 };

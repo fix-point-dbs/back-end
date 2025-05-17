@@ -133,11 +133,43 @@ const create = async (user_id ,data) => {
     }
 
     return "berhasil";
-    
+}
+
+const update = async (service_id, data) => {
+    const { detail_service_types, detail_service_descriptions, specialist_names, specialist_descriptions, photos } = data;
+    await Service.update({
+        bussiness_name: data.bussiness_name,
+        person_responsible: data.person_responsible,
+        description: data.description,
+        address: data.address,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        type: data.type,
+        vehicle_type: data.vehicle_type,
+        start_price_range: data.start_price_range,
+        end_price_range: data.end_price_range,
+        year_founded: data.year_founded,
+        full_operational: data.full_operational,
+        opening_time: data.opening_time,
+        closing_time: data.closing_time,
+        alternative_phone: data.alternative_phone
+    }, { where: { id: service_id } });
+
+    return "berhasil";
+}
+
+const deleted = async (service_id) => {
+    await DetailService.destroy({ where: { service_id: service_id } });
+    await Specialist.destroy({ where: { service_id: service_id } });
+    await Photo.destroy({ where: { service_id: service_id } });
+    await Service.destroy({ where: { id: service_id } });
+    return "berhasil";
 }
 
 module.exports = {
     getAll,
     getById,
-    create
+    create,
+    update,
+    deleted
 }

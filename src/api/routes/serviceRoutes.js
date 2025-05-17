@@ -1,5 +1,5 @@
 const { options } = require('joi');
-const { getServices, getServiceById, createService } = require('../handlers/serviceHandler');
+const { getServices, getServiceById, createService, updateService, deleteService } = require('../handlers/serviceHandler');
 const { servicePayloadSchema } = require('../validators/serviceValidator');
 module.exports = [
     {
@@ -16,14 +16,6 @@ module.exports = [
         method: 'POST',
         path: '/services',
         handler: createService,
-        // options: {
-        //     payload: {
-        //         output: 'stream',
-        //         parse: true,
-        //         multipart: true,
-        //         allow: 'multipart/form-data'
-        //     }
-        // }
         options: {
           payload: {
             output: 'stream',
@@ -64,16 +56,24 @@ module.exports = [
             }
           }
         }
-      }
+      },
       
-    // {
-    //     method: 'PUT',
-    //     path: '/services/{id}',
-    //     handler: updateService
-    // },
-    // {
-    //     method: 'DELETE',
-    //     path: '/services/{id}',
-    //     handler: deleteService
-    // }
+    {
+        method: 'PUT',
+        path: '/services/{id}',
+        handler: updateService,
+        options: {
+          payload: {
+            output: 'stream',
+            parse: true,
+            multipart: true,
+            allow: 'multipart/form-data'
+          }
+        }
+    },
+    {
+        method: 'DELETE',
+        path: '/services/{id}',
+        handler: deleteService
+    }
 ];
