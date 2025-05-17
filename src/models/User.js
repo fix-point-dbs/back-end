@@ -17,7 +17,12 @@ const User ={
   role: {
     type: DataTypes.ENUM('admin', 'user'),
     allowNull: false
-  }
+  },
+    phone: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false
+  },
 }
 
 module.exports = User;

@@ -1,8 +1,7 @@
 const UserField = require('./User');
-const DetailUserField = require('./DetailUser');
-const GeneralInformationField = require('./GeneralInformation');
-const SpecialistField = require('./Specialist');
 const ServiceField = require('./Service');
+const SpecialistField = require('./Specialist');
+const DetailServiceField = require('./DetailService');
 const PhotoField = require('./Photo');
 const BookingField = require('./Booking');
 const ReviewField = require('./Review');
@@ -18,15 +17,8 @@ const User = db.define('users', UserField,{
     freezeTableName: true,
 });
 
-const DetailUser = db.define('detail_users',DetailUserField, {
-    tableName: 'detail_users',
-    timestamps: true,
-    underscored: true,
-    freezeTableName: true,
-});
-
-const GeneralInformation = db.define('general_informations',GeneralInformationField, {
-    tableName: 'general_informations',
+const Service = db.define('services',ServiceField, {
+    tableName: 'services',
     timestamps: true,
     underscored: true,
     freezeTableName: true,
@@ -39,8 +31,8 @@ const Specialist = db.define('specialists',SpecialistField, {
     freezeTableName: true,
 });
 
-const Service = db.define('services',ServiceField, {
-    tableName: 'services',
+const DetailService = db.define('detail_services',DetailServiceField, {
+    tableName: 'detail_services',
     timestamps: true,
     underscored: true,
     freezeTableName: true,
@@ -88,20 +80,18 @@ const Message = db.define('messages',MessageField, {
     freezeTableName: true,
 });
 
-User.hasOne(DetailUser, { foreignKey: 'user_id' });
-DetailUser.hasOne(User, { foreignKey: 'id' });
-DetailUser.hasOne(GeneralInformation, { foreignKey: 'user_id' });
-GeneralInformation.hasOne(DetailUser, { foreignKey: 'id' });
-GeneralInformation.hasMany(Specialist, { foreignKey: 'general_information_id' });
-Specialist.belongsTo(GeneralInformation, { foreignKey: 'id' });
-GeneralInformation.hasMany(Service, { foreignKey: 'general_information_id' });
-Service.belongsTo(GeneralInformation, { foreignKey: 'id' });
-GeneralInformation.hasMany(Photo, { foreignKey: 'general_information_id' });
-Photo.belongsTo(GeneralInformation, { foreignKey: 'id' });
-GeneralInformation.hasMany(Booking, { foreignKey: 'general_information_id' });
-Booking.belongsTo(GeneralInformation, { foreignKey: 'id' });
-GeneralInformation.hasMany(Review, { foreignKey: 'general_information_id' });
-Review.belongsTo(GeneralInformation, { foreignKey: 'id' });
+User.hasOne(Service, { foreignKey: 'user_id' });
+Service.hasOne(User, { foreignKey: 'id' });
+Service.hasMany(Specialist, { foreignKey: 'service_id' });
+Specialist.belongsTo(Service, { foreignKey: 'id' });
+Service.hasMany(DetailService, { foreignKey: 'service_id' });
+DetailService.belongsTo(Service, { foreignKey: 'id' });
+Service.hasMany(Photo, { foreignKey: 'service_id' });
+Photo.belongsTo(Service, { foreignKey: 'id' });
+Service.hasMany(Booking, { foreignKey: 'service_id' });
+Booking.belongsTo(Service, { foreignKey: 'id' });
+Service.hasMany(Review, { foreignKey: 'service_id' });
+Review.belongsTo(Service, { foreignKey: 'id' });
 User.hasMany(PersonalAccessToken, { foreignKey: 'user_id' });
 PersonalAccessToken.belongsTo(User, { foreignKey: 'id' });
 // User.hasMany(Chat, { foreignKey: 'user_id' });
@@ -124,10 +114,9 @@ User.associate = (models) => {
 
 module.exports = {
   User,
-  DetailUser,
-  GeneralInformation,
-  Specialist,
   Service,
+  Specialist,
+  DetailService,
   Photo,
   Booking,
   Review,

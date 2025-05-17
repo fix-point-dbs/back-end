@@ -1,5 +1,6 @@
 const Hapi = require('@hapi/hapi');
 const userRoutes = require('../api/routes/userRoutes');
+const serviceRoutes = require('../api/routes/serviceRoutes');
 
 const createServer = async () => {
   const server = Hapi.server({
@@ -15,6 +16,7 @@ const createServer = async () => {
 
   // Daftarkan route
   server.route(userRoutes);
+  server.route(serviceRoutes);
 
   return server;
 };

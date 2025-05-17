@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { lattitude } = require('./GeneralInformation');
+const { lattitude } = require('./Service');
 
 const Booking = {
     user_id: {

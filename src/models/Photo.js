@@ -5,7 +5,7 @@ const Photo = {
         type: DataTypes.STRING,
         allowNull: false
     },
-    general_information_id: {
+    service_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     }

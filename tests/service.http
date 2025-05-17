@@ -1,0 +1,23 @@
+GET http://localhost:3000/services
+
+###
+
+### Create service (form-data)
+POST http://localhost:3000/services
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="name"
+
+Jasa Ganti Oli
+--MyBoundary
+Content-Disposition: form-data; name="description"
+
+Ganti oli cepat & murah
+--MyBoundary
+Content-Disposition: form-data; name="image"; filename="oli.jpg"
+Content-Type: image/jpeg
+
+< ./oli.jpg
+--MyBoundary--
+

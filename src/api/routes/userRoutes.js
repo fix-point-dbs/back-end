@@ -6,7 +6,7 @@ const {
   deleteUser
 } = require('../handlers/userHandler');
 
-const { userPayloadSchema } = require('../validators/userValidator');
+// const { userPayloadSchema } = require('../validators/userValidator');
 
 module.exports = [
   {
