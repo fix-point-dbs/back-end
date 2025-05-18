@@ -1,5 +1,5 @@
 const { success } = require('../../utils/ApiResponser');
-const { getAll, getById, create, update, deleted } = require('../../services/serviceServices');
+const { getAll, getById, getAllByType, create, update, deleted } = require('../../services/serviceServices');
 const getServices = async (request, h) => {
     try {
         const response = await getAll();
@@ -23,6 +23,20 @@ const getServiceById = async (request, h) => {
                 message: 'Service not found'
             }).code(404);
         }
+        return h.response(success(response, 'success', 200)).code(200);
+    } catch (error) {
+        console.error(error);
+        return h.response({
+            status: 'error',
+            message: 'Internal Server Error'
+        }).code(500);
+    }
+};
+
+const getServicesByType = async (request, h) => {
+    try {
+        const { type } = request.params;
+        const response = await getAllByType(type);
         return h.response(success(response, 'success', 200)).code(200);
     } catch (error) {
         console.error(error);
@@ -80,5 +94,6 @@ module.exports = {
     getServiceById,
     createService,
     updateService,
-    deleteService
+    deleteService,
+    getServicesByType
 };

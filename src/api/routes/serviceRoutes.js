@@ -1,5 +1,4 @@
-const { options } = require('joi');
-const { getServices, getServiceById, createService, updateService, deleteService } = require('../handlers/serviceHandler');
+const { getServices, getServiceById, getServicesByType, createService, updateService, deleteService } = require('../handlers/serviceHandler');
 const { servicePayloadSchema } = require('../validators/serviceValidator');
 module.exports = [
     {
@@ -11,6 +10,11 @@ module.exports = [
         method: 'GET',
         path: '/services/{id}',
         handler: getServiceById
+    },
+    {
+        method: 'GET',
+        path: '/services/{type}/type',
+        handler: getServicesByType
     },
     {
         method: 'POST',

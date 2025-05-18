@@ -66,6 +66,38 @@ const getById = async (id) => {
     return service;
 }
 
+const getAllByType = async (type) => {
+    const services = await Service.findAll({
+        where: { type },
+        attributes: {
+            include: [
+                [
+                    db.literal(`(
+                      SELECT AVG(rating)
+                      FROM reviews
+                      WHERE reviews.service_id = services.id
+                    )`),
+                    'average_rating'
+                ],
+                [
+                    db.literal(`(
+                      SELECT COUNT(*)
+                      FROM reviews
+                      WHERE reviews.service_id = services.id
+                    )`),
+                    'review_count'
+                ]
+            ]
+        },
+        include: [
+            { model: Specialist },
+            { model: Photo },
+            { model: DetailService }
+        ]
+    });
+    return services;
+}
+
 const create = async (user_id ,data) => {
     const { detail_service_types, detail_service_descriptions, specialist_names, specialist_descriptions, photos } = data;
     const service = await Service.create({
@@ -169,6 +201,7 @@ const deleted = async (service_id) => {
 module.exports = {
     getAll,
     getById,
+    getAllByType,
     create,
     update,
     deleted
