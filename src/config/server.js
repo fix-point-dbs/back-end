@@ -2,6 +2,7 @@ const Hapi = require('@hapi/hapi');
 const userRoutes = require('../api/routes/userRoutes');
 const serviceRoutes = require('../api/routes/serviceRoutes');
 const bookingRoutes = require('../api/routes/bookingRoutes');
+const reviewRoutes = require('../api/routes/reviewRoutes');
 
 const createServer = async () => {
   const server = Hapi.server({
@@ -19,6 +20,7 @@ const createServer = async () => {
   server.route(userRoutes);
   server.route(serviceRoutes);
   server.route(bookingRoutes);
+  server.route(reviewRoutes);
 
   return server;
 };

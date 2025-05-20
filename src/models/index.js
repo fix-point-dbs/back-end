@@ -92,6 +92,8 @@ Service.hasMany(Booking, { foreignKey: 'service_id' });
 Booking.belongsTo(Service, { foreignKey: 'service_id' });
 Service.hasMany(Review, { foreignKey: 'service_id' });
 Review.belongsTo(Service, { foreignKey: 'id' });
+User.hasMany(Review, { foreignKey: 'user_id' });
+Review.belongsTo(User, { foreignKey: 'user_id' });
 User.hasMany(PersonalAccessToken, { foreignKey: 'user_id' });
 PersonalAccessToken.belongsTo(User, { foreignKey: 'id' });
 User.hasMany(Booking, { foreignKey: 'user_id' });
