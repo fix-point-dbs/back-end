@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const { Booking, Service, User } = require('../models');
 const getAll = async () => {
     const bookings = await Booking.findAll({
@@ -18,6 +20,26 @@ const getById = async (id) => {
 }
 
 const create = async (user_id ,data) => {
+    const uploadDir = path.join(__dirname, '../uploads/photo-booking');
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    let imagePath = null;
+
+    if (data.photo && data.photo.hapi) {
+      const filename = `${Date.now()}-${data.photo.hapi.filename}`;
+      const filepath = path.join(uploadDir, filename);
+      const fileStream = fs.createWriteStream(filepath);
+  
+      await new Promise((resolve, reject) => {
+        data.photo.pipe(fileStream);
+        data.photo.on('end', resolve);
+        data.photo.on('error', reject);
+      });
+  
+      imagePath = `/uploads/${filename}`;
+    }
+  
     const booking = await Booking.create({
         user_id: user_id,
         service_id: data.service_id,
@@ -25,23 +47,66 @@ const create = async (user_id ,data) => {
         vehicle: data.vehicle,
         vehicle_brand: data.vehicle_brand,
         police_number: data.police_number,
-        description: data.description
+        description: data.description,
+        status: data.status,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        photo: imagePath
     });
     return "Success";
 }
 
-const update = async (booking_id, data) => {
-    const booking = await Booking.update({
-        user_id: data.user_id,
-        service_id: data.service_id,
-        general_information_id: data.general_information_id,
-        vehicle: data.vehicle,
-        vehicle_brand: data.vehicle_brand,
-        police_number: data.police_number,
-        description: data.description
-    }, { where: { id: booking_id } });
-    return "Success";
-}
+const update = async (bookingId, data) => {
+  const uploadDir = path.join(__dirname, '../uploads/photo-booking');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+
+  const booking = await Booking.findOne({ where: { id: bookingId} });
+  if (!booking) {
+    throw new Error('Data booking tidak ditemukan');
+  }
+
+  let imagePath = booking.photo;
+
+
+  if (data.photo && data.photo.hapi) {
+    const oldPath = path.join(__dirname, '..', booking.photo);
+    if (fs.existsSync(oldPath)) {
+      fs.unlinkSync(oldPath);
+    }
+
+    const filename = `${Date.now()}-${data.photo.hapi.filename}`;
+    const filepath = path.join(uploadDir, filename);
+    const fileStream = fs.createWriteStream(filepath);
+
+    await new Promise((resolve, reject) => {
+      data.photo.pipe(fileStream);
+      data.photo.on('end', resolve);
+      data.photo.on('error', reject);
+    });
+
+    imagePath = `/uploads/photo-booking/${filename}`;
+  }
+
+  await booking.update({
+    service_id: data.service_id,
+    general_information_id: data.general_information_id,
+    vehicle: data.vehicle,
+    vehicle_brand: data.vehicle_brand,
+    police_number: data.police_number,
+    description: data.description,
+    status: data.status,
+    latitude: data.latitude,
+    longitude: data.longitude,
+    photo: imagePath
+  });
+
+  return 'Success';
+};
+
+module.exports = { update };
+
 
 const deleted = async (booking_id) => {
     const booking = await Booking.destroy({ where: { id: booking_id } });

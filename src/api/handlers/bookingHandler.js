@@ -42,7 +42,7 @@ const createBooking = async (request, h) => {
         console.error(error);
         return h.response({
             status: 'error',
-            message: 'Internal Server Error'
+            message: 'Internal Server Error '+error
         }).code(500);
     }
 }
@@ -56,7 +56,7 @@ const updateBooking = async (request, h) => {
         console.error(error);
         return h.response({
             status: 'error',
-            message: 'Internal Server Error'
+            message: 'Internal Server Error '+error
         }).code(500);
     }
 }

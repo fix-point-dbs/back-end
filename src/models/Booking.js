@@ -1,5 +1,4 @@
 const { DataTypes } = require('sequelize');
-const { lattitude } = require('./Service');
 
 const Booking = {
     user_id: {
@@ -30,7 +29,7 @@ const Booking = {
         type: DataTypes.ENUM('pending', 'approved', 'rejected'),
         allowNull: false
     },
-    lattitude: {
+    latitude: {
         type: DataTypes.STRING,
         allowNull: false
     },
