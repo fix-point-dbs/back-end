@@ -108,7 +108,7 @@ const update = async (bookingId, data) => {
 module.exports = { update };
 
 
-const deleted = async (booking_id) => {
+const destroy = async (booking_id) => {
     const booking = await Booking.destroy({ where: { id: booking_id } });
     return "Success";
 }
@@ -118,5 +118,5 @@ module.exports = {
     getById,
     create,
     update,
-    deleted
+    destroy
 }

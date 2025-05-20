@@ -3,7 +3,7 @@ const {
     getById,
     create,
     update,
-    deleted
+    destroy
  } = require('../../services/bookingServices');
 const { success } = require('../../utils/ApiResponser');
 const getBookings = async (request, h) => {
@@ -64,7 +64,7 @@ const updateBooking = async (request, h) => {
 const deleteBooking = async (request, h) => {
     try {
         const { id } = request.params;
-        const response = await deleted(id);
+        const response = await destroy(id);
         return h.response(success(response, 'success', 200)).code(200);
     } catch (error) {
         console.error(error);

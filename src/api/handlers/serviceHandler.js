@@ -1,5 +1,5 @@
 const { success } = require('../../utils/ApiResponser');
-const { getAll, getById, getAllByType, create, update, deleted } = require('../../services/serviceServices');
+const { getAll, getById, getAllByType, create, update, destroy } = require('../../services/serviceServices');
 const getServices = async (request, h) => {
     try {
         const response = await getAll();
@@ -78,7 +78,7 @@ const updateService = async (request, h) => {
 const deleteService = async (request, h) => {
     try {
         const { id } = request.params;
-        const response = await deleted(id);
+        const response = await destroy(id);
         return h.response(success(response, 'success', 200)).code(200);
     } catch (error) {
         console.error(error);

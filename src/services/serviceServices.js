@@ -190,7 +190,7 @@ const update = async (service_id, data) => {
     return "berhasil";
 }
 
-const deleted = async (service_id) => {
+const destroy = async (service_id) => {
     await DetailService.destroy({ where: { service_id: service_id } });
     await Specialist.destroy({ where: { service_id: service_id } });
     await Photo.destroy({ where: { service_id: service_id } });
@@ -204,5 +204,5 @@ module.exports = {
     getAllByType,
     create,
     update,
-    deleted
+    destroy
 }
