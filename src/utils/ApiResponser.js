@@ -10,7 +10,7 @@ module.exports = {
       };
     },
   
-    error(data = {}, message = null, code = 400) {
+    err(data = {}, message = null, code = 400) {
       return {
         meta: {
           code: code,
