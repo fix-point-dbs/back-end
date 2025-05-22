@@ -1,3 +1,4 @@
+const sanctumAuth = require('../middleware/sanctumAuth');
 const { register, login, logout } = require('../handlers/authHandler');
 module.exports = [
     {
@@ -13,6 +14,11 @@ module.exports = [
     {
         method: 'POST',
         path: '/logout',
-        handler: logout
+        handler: logout,
+        options: {
+            pre: [
+                sanctumAuth
+            ]
+        }
     }
 ]

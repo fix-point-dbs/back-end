@@ -5,7 +5,7 @@ const {
     updateBooking,
     deleteBooking
  } = require('../handlers/bookingHandler');
-
+const sanctumAuth = require('../middleware/sanctumAuth');
 const { bookingPayloadSchema } = require('../validators/bookingValidator');
 module.exports = [
     {
@@ -29,6 +29,9 @@ module.exports = [
                 multipart: true,
                 allow: 'multipart/form-data'
             },
+            pre: [
+                sanctumAuth
+            ],
             validate: {
                 payload: bookingPayloadSchema,
                 failAction: (request, h, err) => {
@@ -48,6 +51,9 @@ module.exports = [
                 multipart: true,
                 allow: 'multipart/form-data'
             },
+            pre: [
+                sanctumAuth
+            ],
             validate: {
                 payload: bookingPayloadSchema,
                 failAction: (request, h, err) => {
@@ -59,6 +65,11 @@ module.exports = [
     {
         method: 'DELETE',
         path: '/bookings/{id}',
-        handler: deleteBooking
+        handler: deleteBooking,
+        options: {
+            pre: [
+                sanctumAuth
+            ]
+        }
     }
 ];

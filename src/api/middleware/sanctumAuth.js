@@ -1,5 +1,4 @@
-const PersonalAccessToken = require('../../models');
-const User = require('../../models/User');
+const {PersonalAccessToken, User} = require('../../models');
 
 
 const sanctumAuth = async (request, h) => {
@@ -10,19 +9,18 @@ const sanctumAuth = async (request, h) => {
   }
 
   const token = auth.split(' ')[1];
-  const tokenRecord = await Token.findOne({ where: { token } });
+  const tokenRecord = await PersonalAccessToken.findOne({ where: { token:token } });
 
   if (!tokenRecord) {
     return h.response({ message: 'Token tidak valid' }).code(401).takeover();
   }
 
-  // ✅ Periksa apakah token sudah kadaluwarsa
   if (new Date(tokenRecord.expiresAt) < new Date()) {
     PersonalAccessToken.destroy({ where: { id: tokenRecord.id } });
     return h.response({ message: 'Token sudah kadaluwarsa' }).code(401).takeover();
   }
 
-  const user = await User.findByPk(tokenRecord.userId);
+  const user = await User.findByPk(tokenRecord.user_id);
   if (!user) {
     return h.response({ message: 'User tidak ditemukan' }).code(401).takeover();
   }

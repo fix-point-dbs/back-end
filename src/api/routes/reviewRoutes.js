@@ -6,11 +6,12 @@ const {
     deleteReview
  } = require('../handlers/reviewHandler');
 const { reviewPayloadSchema } = require('../validators/reviewValidator');
+const sanctumAuth = require('../middleware/sanctumAuth');
 module.exports = [
     {
         method: 'GET',
         path: '/reviews',
-        handler: getAllReviews
+        handler: getAllReviews,
     },
     {
         method: 'GET',
@@ -22,6 +23,9 @@ module.exports = [
         path: '/reviews',
         handler: createReview,
         options: {
+            pre: [
+                sanctumAuth
+            ],
             validate: {
                 payload: reviewPayloadSchema,
                 failAction: (request, h, err) => {
@@ -33,11 +37,27 @@ module.exports = [
     {
         method: 'PUT',
         path: '/reviews/{id}',
-        handler: updateReview
+        handler: updateReview,
+        options: {
+            pre: [
+                sanctumAuth
+            ],
+            validate: {
+                payload: reviewPayloadSchema,
+                failAction: (request, h, err) => {
+                    return h.response({ status: 'fail', message: err.message }).code(400).takeover();
+                }
+            }
+        }
     },
     {
         method: 'DELETE',
         path: '/reviews/{id}',
-        handler: deleteReview
+        handler: deleteReview,
+        options: {
+            pre: [
+                sanctumAuth
+            ]
+        }
     }
 ]

@@ -1,5 +1,6 @@
 const { getServices, getServiceById, getServicesByType, createService, updateService, deleteService } = require('../handlers/serviceHandler');
 const { servicePayloadSchema } = require('../validators/serviceValidator');
+const sanctumAuth = require('../middleware/sanctumAuth');
 module.exports = [
     {
         method: 'GET',
@@ -28,6 +29,7 @@ module.exports = [
             allow: 'multipart/form-data'
           },
           pre: [
+            sanctumAuth,
             {
               method: (request, h) => {
                 const payload = request.payload;
@@ -59,7 +61,7 @@ module.exports = [
                 .takeover();
             }
           }
-        }
+        },
       },
       
     {
@@ -72,12 +74,20 @@ module.exports = [
             parse: true,
             multipart: true,
             allow: 'multipart/form-data'
-          }
+          },
+          pre:[
+            sanctumAuth
+          ]
         }
     },
     {
         method: 'DELETE',
         path: '/services/{id}',
-        handler: deleteService
+        handler: deleteService,
+        options: {
+            pre: [
+                sanctumAuth
+            ]
+        }
     }
 ];
