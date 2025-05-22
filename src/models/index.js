@@ -98,23 +98,35 @@ User.hasMany(PersonalAccessToken, { foreignKey: 'user_id' });
 PersonalAccessToken.belongsTo(User, { foreignKey: 'id' });
 User.hasMany(Booking, { foreignKey: 'user_id' });
 Booking.belongsTo(User, { foreignKey: 'user_id' });
-// User.hasMany(Chat, { foreignKey: 'user_id' });
-// Chat.belongsTo(User, { foreignKey: 'id' });
-// Chat.hasMany(Message, { foreignKey: 'chat_id' });
-// Message.belongsTo(Chat, { foreignKey: 'id' });
-User.associate = (models) => {
-    User.hasMany(models.Chat, { foreignKey: 'mitra_id', as: 'mitraChats' });
-    User.hasMany(models.Chat, { foreignKey: 'user_id', as: 'userChats' });
 
-    User.hasMany(models.Message, { foreignKey: 'sender_id', as: 'sentMessages' });
-  };
+Chat.belongsTo(User, { as: 'user', foreignKey: 'user_id' });
+User.hasMany(Chat, { as: 'userChats', foreignKey: 'user_id' });
 
-  Chat.associate = (models) => {
-    Chat.belongsTo(models.User, { foreignKey: 'mitra_id', as: 'mitra' });
-    Chat.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+// Chat: mitra_id → User
+Chat.belongsTo(User, { as: 'mitra', foreignKey: 'mitra_id' });
+User.hasMany(Chat, { as: 'mitraChats', foreignKey: 'mitra_id' });
 
-    Chat.hasMany(models.Message, { foreignKey: 'chat_id', as: 'messages' });
-  };
+// Message: sender_id → User
+Message.belongsTo(User, { as: 'sender', foreignKey: 'sender_id' });
+User.hasMany(Message, { as: 'sentMessages', foreignKey: 'sender_id' });
+
+// Message: chat_id → Chat
+Message.belongsTo(Chat, { foreignKey: 'chat_id' });
+Chat.hasMany(Message, { foreignKey: 'chat_id' });
+
+// User.associate = (models) => {
+//     User.hasMany(models.Chat, { foreignKey: 'mitra_id', as: 'mitraChats' });
+//     User.hasMany(models.Chat, { foreignKey: 'user_id', as: 'userChats' });
+
+//     User.hasMany(models.Message, { foreignKey: 'sender_id', as: 'sentMessages' });
+//   };
+
+//   Chat.associate = (models) => {
+//     Chat.belongsTo(models.User, { foreignKey: 'mitra_id', as: 'mitra' });
+//     Chat.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+
+//     Chat.hasMany(models.Message, { foreignKey: 'chat_id', as: 'messages' });
+//   };
 
 module.exports = {
   User,

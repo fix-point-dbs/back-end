@@ -4,7 +4,7 @@ const serviceRoutes = require('../api/routes/serviceRoutes');
 const bookingRoutes = require('../api/routes/bookingRoutes');
 const reviewRoutes = require('../api/routes/reviewRoutes');
 const authRoutes = require('../api/routes/authRoutes');
-
+const chatRoutes = require('../api/routes/chatRoutes');
 const createServer = async () => {
   const server = Hapi.server({
     port: 3000,
@@ -23,6 +23,7 @@ const createServer = async () => {
   server.route(bookingRoutes);
   server.route(reviewRoutes);
   server.route(authRoutes);
+  server.route(chatRoutes);
 
   return server;
 };
