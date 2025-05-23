@@ -1,56 +1,33 @@
-const { Chat, Message } = require('../../models');
-
-
+const { success, error } = require('../../utils/ApiResponser');
+const { createChat, createMessage, getMessageById } = require('../../services/chatServices');
 const createOrGetChat = async (request, h) => {
-    const { user_id, mitra_id } = request.payload;
-
-    let chat = await Chat.findOne({
-      where: { user_id, mitra_id }
-    });
-
-    if (!chat) {
-      chat = await Chat.create({
-        user_id,
-        mitra_id,
-        last_message: ''
-      });
+    try {
+      const chat = await createChat(request);
+      return h.response(success(chat, "Data berhasil", 200)).code(200);
+    } catch (error) {
+      return h.response(error({}, err, 500)).code(500);
     }
 
-    return h.response(chat).code(200);
   }
 
   const sendMessage= async (request, h) => {
-    const { chat_id, sender_id, message } = request.payload;
+    try {
+      const message = await createMessage(request);
+      return h.response(success(message, "berhasil ditambahkan", 201)).code(201);
+    } catch (err) {
+      return h.response(error({}, err, 500)).code(500);
+    }
 
-    const msg = await Message.create({
-      chat_id,
-      sender_id,
-      message,
-      is_read: false
-    });
-
-    // Update last message in Chat
-    await Chat.update(
-      { last_message: message },
-      { where: { id: chat_id } }
-    );
-
-    return h.response(msg).code(201);
   }
 
   const getMessagesByChatId = async (request, h) => {
-    const { chat_id } = request.params;
-
-    const messages = await Message.findAll({
-      where: { chat_id },
-      order: [['createdAt', 'ASC']]
-    });
-
-    return h.response(messages).code(200);
+    try {
+      const messages = await getMessageById(request);
+      return h.response(success(messages, "Data berhasil diambil")).code(200);
+    } catch (err) {
+      return h.response(error({}, err, 500)).code(500);
+    }
   }
-
-
-
 module.exports = {
     createOrGetChat,
     sendMessage,
