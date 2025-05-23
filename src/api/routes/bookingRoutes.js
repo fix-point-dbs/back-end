@@ -7,6 +7,7 @@ const {
  } = require('../handlers/bookingHandler');
 const sanctumAuth = require('../middleware/sanctumAuth');
 const { bookingPayloadSchema } = require('../validators/bookingValidator');
+const { error } = require('../../utils/ApiResponser');
 module.exports = [
     {
         method: 'GET',
@@ -35,7 +36,7 @@ module.exports = [
             validate: {
                 payload: bookingPayloadSchema,
                 failAction: (request, h, err) => {
-                    return h.response({ status: 'fail', message: err.message }).code(400).takeover();
+                    return h.response(error({}, err.message, 400) ).code(400).takeover();
                 }
             }
         }
@@ -57,7 +58,7 @@ module.exports = [
             validate: {
                 payload: bookingPayloadSchema,
                 failAction: (request, h, err) => {
-                    return h.response({ status: 'fail', message: err.message }).code(400).takeover();
+                    return h.response(error({}, err, 400)).code(400).takeover();
                 }
             }
         }
