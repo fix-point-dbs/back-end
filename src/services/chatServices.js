@@ -1,4 +1,4 @@
-const { Chat, Message } = require('../../models');
+const { Chat, Message } = require('../models');
 
 const createChat = async (data) => {
     const { user_id, mitra_id } = data.payload;
