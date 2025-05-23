@@ -7,7 +7,7 @@ const User ={
   },
   email: {
     type: DataTypes.STRING,
-    // unique: true,
+    unique: true,
     allowNull: false
   },
   password: {

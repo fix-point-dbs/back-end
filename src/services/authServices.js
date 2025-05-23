@@ -4,6 +4,10 @@ const { User, PersonalAccessToken } = require('../models');
 const { name } = require('../models/User');
 
 const registerService = async (role ,data) => {
+    const checkPhone = await User.findAll({ where: { phone: data.phone }});
+    const checkEmail = await User.findAll({ where: { email: data.email } })
+    if(checkPhone.length > 0) throw new Error('Nomor telepon sudah terdaftar');
+    if(checkEmail.length > 0) throw new Error('Email sudah terdaftar');
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const user = await User.create({
          name: data.name, 
@@ -20,7 +24,7 @@ const loginService = async (data) => {
     const user = await User.findOne({ where: { email:email } });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-        return h.response({ message: 'Email atau password salah' }).code(401);
+        throw new Error("Email atau Password Salah")
     }
 
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);

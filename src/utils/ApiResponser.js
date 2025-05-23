@@ -1,23 +1,19 @@
 module.exports = {
     success(data = {}, message = null, code = 200) {
       return {
-        meta: {
           code: code,
           status: 'success',
           message: message,
-        },
-        data: data
+          data: data
       };
     },
   
-    err(data = {}, message = null, code = 400) {
+    error(data = {}, message = null, code = 400) {
       return {
-        meta: {
           code: code,
           status: 'error',
           message: message,
-        },
-        data: data
+          data: data
       };
     },
   
