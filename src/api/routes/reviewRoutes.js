@@ -7,6 +7,7 @@ const {
  } = require('../handlers/reviewHandler');
 const { reviewPayloadSchema } = require('../validators/reviewValidator');
 const sanctumAuth = require('../middleware/sanctumAuth');
+const { error } = require('../../utils/ApiResponser');
 module.exports = [
     {
         method: 'GET',
@@ -29,7 +30,7 @@ module.exports = [
             validate: {
                 payload: reviewPayloadSchema,
                 failAction: (request, h, err) => {
-                    return h.response({ status: 'fail', message: err.message }).code(400).takeover();
+                    return h.response(error({}, err.message ,400)).code(400).takeover();
                 }
             }
         }
@@ -45,7 +46,7 @@ module.exports = [
             validate: {
                 payload: reviewPayloadSchema,
                 failAction: (request, h, err) => {
-                    return h.response({ status: 'fail', message: err.message }).code(400).takeover();
+                    return h.response(error({}, err.message ,400)).code(400).takeover();
                 }
             }
         }

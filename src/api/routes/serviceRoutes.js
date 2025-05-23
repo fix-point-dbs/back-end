@@ -1,6 +1,7 @@
 const { getServices, getServiceById, getServicesByType, createService, updateService, deleteService } = require('../handlers/serviceHandler');
 const { servicePayloadSchema } = require('../validators/serviceValidator');
 const sanctumAuth = require('../middleware/sanctumAuth');
+const { error } = require('../../utils/ApiResponser');
 module.exports = [
     {
         method: 'GET',
@@ -56,7 +57,7 @@ module.exports = [
             payload: servicePayloadSchema,
             failAction: (request, h, err) => {
               return h
-                .response({ status: 'fails', message: err.message })
+                .response(error({},err.message, 400))
                 .code(400)
                 .takeover();
             }

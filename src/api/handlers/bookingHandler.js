@@ -9,7 +9,7 @@ const { success, error } = require('../../utils/ApiResponser');
 const getBookings = async (request, h) => {
     try {
         const response = await getAll();
-        return h.response(success(response, 'Data berhasil di ambil', 200)).code(200);
+        return h.response(success(response, 'Data berhasil diambil', 200)).code(200);
     } catch (err) {
         return h.response(error({}, err, 500)).code(500);
     }
@@ -19,7 +19,7 @@ const getBookingById = async (request, h) => {
     try {
         const { id } = request.params;
         const response = await getById(id);
-        return h.response(success(response, 'Data berhasil di ambil', 200)).code(200);
+        return h.response(success(response, 'Data berhasil diambil', 200)).code(200);
     } catch (err) {
         return h.response(error({}, err, 500)).code(500);
     }
