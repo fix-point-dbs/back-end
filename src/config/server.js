@@ -1,6 +1,8 @@
 const Hapi = require('@hapi/hapi');
 const http = require('http');
 const { Server } = require('socket.io');
+const Inert = require('@hapi/inert');
+const Path = require('path');
 
 // Route imports
 const userRoutes = require('../api/routes/userRoutes');
@@ -22,9 +24,41 @@ const createServer = async () => {
     routes: {
       cors: {
         origin: ['*']
+      },
+      files: {
+        relativeTo: Path.join(__dirname, '../uploads') // direktori utama file
       }
     }
   });
+
+  await server.register(Inert);
+ // ✅ PENTING! Serve folder uploads secara absolut
+ server.route({
+  method: 'GET',
+  path: '/uploads/{folder}/{filename}', // contoh: /uploads/photo-services/foto1.jpg
+  handler: {
+    file: (request) => {
+      const { folder, filename } = request.params;
+      return `${folder}/${filename}`;
+    }
+  }
+});
+
+//  server.route({
+//   method: 'GET',
+//   path: '/uploads/{param*}',
+//   handler: () => {
+//     return path.join(__dirname, '../uploads');
+//   }
+//   // handler: {
+//   //   directory: {
+//   //     path: path.join(__dirname, '../uploads/photo-services/asd.png'),
+//   //     index: false,
+//   //     listing: false
+//   //   }
+//   // }
+// });
+  // Serve static files in `/uploads` folder
 
   // Daftarkan semua route
   server.route(userRoutes);
@@ -33,7 +67,7 @@ const createServer = async () => {
   server.route(reviewRoutes);
   server.route(authRoutes);
   server.route(chatRoutes);
-
+ 
   // Bungkus dengan http server
   const listener = http.createServer(server.listener);
 

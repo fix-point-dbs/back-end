@@ -1,4 +1,4 @@
-const { Service, Photo, DetailService, Specialist } = require('../models');
+const { Service, Photo, DetailService, Specialist, Review, User } = require('../models');
 const { db } = require('../config/database');
 const fs = require('fs');
 const path = require('path');
@@ -60,7 +60,15 @@ const getById = async (id) => {
         include: [
             { model: Specialist },
             { model: Photo },
-            { model: DetailService }
+            { model: DetailService },
+            { model: Review,
+                include: [
+                    {
+                      model: User,
+                      attributes: ['name'] // ✅ hanya ambil nama user
+                    }
+                  ]
+             }
         ]
     });
     return service;
@@ -136,7 +144,7 @@ const create = async (user_id ,data) => {
         })
     }
 
-    const uploadDir = path.join(__dirname, '../uploads/photo-services');
+    const uploadDir = path.join(__dirname, '../../uploads/photo-services');
 
     // Pastikan folder ada
     if (!fs.existsSync(uploadDir)) {
