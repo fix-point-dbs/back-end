@@ -12,12 +12,22 @@ module.exports = [
     {
         method: 'GET',
         path: '/bookings',
-        handler: getBookings
+        handler: getBookings,
+        options: {
+            pre: [
+                sanctumAuth
+            ]
+        }
     },
     {
         method: 'GET',
         path: '/bookings/{id}',
-        handler: getBookingById
+        handler: getBookingById,
+        options: {
+            pre: [
+                sanctumAuth
+            ]
+        }
     },
     {
         method: 'POST',

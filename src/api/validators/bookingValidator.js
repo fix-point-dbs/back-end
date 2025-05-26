@@ -1,10 +1,6 @@
 const Joi = require('joi');
 
 const bookingPayloadSchema = Joi.object({
-    user_id: Joi.number().required().messages({
-        'number.base': 'ID pengguna harus berupa angka',
-        'any.required': 'ID pengguna wajib diisi'
-    }),
     service_id: Joi.number().required().messages({
         'number.base': 'ID layanan harus berupa angka',
         'any.required': 'ID layanan wajib diisi'

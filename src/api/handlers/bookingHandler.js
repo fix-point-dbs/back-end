@@ -6,6 +6,7 @@ const {
     destroy
  } = require('../../services/bookingServices');
 const { success, error } = require('../../utils/ApiResponser');
+const {getUser} = require('../../utils/VerificationToken');
 const getBookings = async (request, h) => {
     try {
         const response = await getAll();
@@ -27,7 +28,7 @@ const getBookingById = async (request, h) => {
 
 const createBooking = async (request, h) => {
     try {
-        const user_id = 1;
+        const user_id = await getUser(request.headers.authorization);
         const response = await create(user_id, request.payload);
         return h.response(success(response, 'Data berhasil ditambahkan', 201)).code(201);
     } catch (err) {

@@ -9,6 +9,10 @@ const Booking = {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    detail_service_name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     vehicle: {
         type: DataTypes.STRING,
         allowNull: false

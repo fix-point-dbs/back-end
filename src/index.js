@@ -7,7 +7,7 @@ const start = async () => {
     const { hapiServer, socketServer } = await createServer();
 
     // Sync DB
-    // await db.sync();
+    await db.sync();
     console.log('✅ Database synced successfully');
 
     // Start Hapi
