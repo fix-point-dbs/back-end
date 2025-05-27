@@ -5,7 +5,9 @@ const getAll = async () => {
     const bookings = await Booking.findAll({
         include: [
             { model: Service },
-            { model: User }
+            { model: User,
+              exclude: ['password']
+            }
         ]});
     return bookings;
 }
@@ -14,7 +16,9 @@ const getById = async (id) => {
     const booking = await Booking.findByPk(id, {
         include: [
             { model: Service },
-            { model: User }
+            { model: User,
+              attributes: { exclude: ['password'] }
+             }
     ]});
     return booking;
 }
@@ -43,17 +47,19 @@ const create = async (user_id ,data) => {
     const booking = await Booking.create({
         user_id: user_id,
         service_id: data.service_id,
-        general_information_id: data.general_information_id,
         vehicle: data.vehicle,
+        detail_service_name: data.detail_service_name,
         vehicle_brand: data.vehicle_brand,
         police_number: data.police_number,
         description: data.description,
         status: data.status,
+        address: data.address,
+        postal_code: data.postal_code,
         latitude: data.latitude,
         longitude: data.longitude,
         photo: imagePath
     });
-    return "Success";
+    return booking;
 }
 
 const update = async (bookingId, data) => {
@@ -91,12 +97,13 @@ const update = async (bookingId, data) => {
 
   await booking.update({
     service_id: data.service_id,
-    general_information_id: data.general_information_id,
     vehicle: data.vehicle,
     vehicle_brand: data.vehicle_brand,
     police_number: data.police_number,
     description: data.description,
     status: data.status,
+    address: data.address,
+    postal_code: data.postal_code,
     latitude: data.latitude,
     longitude: data.longitude,
     photo: imagePath

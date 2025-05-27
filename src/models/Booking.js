@@ -30,7 +30,15 @@ const Booking = {
         allowNull: false
     },
     status: {
-        type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+        type: DataTypes.ENUM('pending', 'in progress', 'approved', 'rejected','done'),
+        allowNull: false
+    },
+    address: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    postal_code:{
+        type: DataTypes.STRING,
         allowNull: false
     },
     latitude: {
