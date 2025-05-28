@@ -1,10 +1,15 @@
 const {createOrGetChat, sendMessage, getMessagesByChatId} = require('../handlers/chatHandler');
-
+const sanctumAuth = require('../middleware/sanctumAuth');
 module.exports = [
   {
     method: 'POST',
     path: '/chats',
-    handler: createOrGetChat
+    handler: createOrGetChat,
+    options: {
+      pre: [
+        sanctumAuth
+      ]
+    }
   },
   {
     method: 'POST',

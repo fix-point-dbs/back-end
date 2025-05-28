@@ -1,8 +1,10 @@
 const { success, error } = require('../../utils/ApiResponser');
 const { createChat, createMessage, getMessageById } = require('../../services/chatServices');
+const {getUser} = require('../../utils/VerificationToken');
 const createOrGetChat = async (request, h) => {
     try {
-      const chat = await createChat(request);
+      const user_id = await getUser(request);
+      const chat = await createChat(user_id,request);
       return h.response(success(chat, "Data berhasil", 200)).code(200);
     } catch (error) {
       return h.response(error({}, err, 500)).code(500);

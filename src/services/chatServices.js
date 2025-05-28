@@ -1,7 +1,7 @@
 const { Chat, Message } = require('../models');
 
-const createChat = async (data) => {
-    const { user_id, mitra_id } = data.payload;
+const createChat = async (user_id,data) => {
+    const { mitra_id } = data.payload;
 
     let chat = await Chat.findOne({
       where: { user_id, mitra_id }
