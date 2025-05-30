@@ -3,7 +3,9 @@ const {
     getById,
     create,
     update,
-    destroy
+    destroy,
+    getAllByUserId,
+    updatedStatus
  } = require('../../services/bookingServices');
 const { success, error } = require('../../utils/ApiResponser');
 const {getUser} = require('../../utils/VerificationToken');
@@ -56,10 +58,32 @@ const deleteBooking = async (request, h) => {
     }
 }
 
+const getBookingsByUserId = async (request, h) => {
+    try {
+        const { user_id } = request.params;
+        const response = await getAllByUserId(user_id);
+        return h.response(success(response, 'Data berhasil diambil', 200)).code(200);
+    } catch (err) {
+        return h.response(error({}, err, 500)).code(500);
+    }
+}
+
+const updateStatus = async (request, h) => {
+    try {
+        const { id } = request.params;
+        const response = await updatedStatus(id, request.payload);
+        return h.response(success(response, 'Data berhasil di update', 200)).code(200);
+    } catch (err) {
+        return h.response(error({}, err, 500)).code(500);
+    }
+}
+
 module.exports = {
     getBookings,
     getBookingById,
     createBooking,
     updateBooking,
-    deleteBooking
+    deleteBooking,
+    getBookingsByUserId,
+    updateStatus
 }

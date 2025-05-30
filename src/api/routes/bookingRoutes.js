@@ -3,7 +3,9 @@ const {
     getBookingById,
     createBooking,
     updateBooking,
-    deleteBooking
+    deleteBooking,
+    getBookingsByUserId,
+    updateStatus
  } = require('../handlers/bookingHandler');
 const sanctumAuth = require('../middleware/sanctumAuth');
 const { bookingPayloadSchema } = require('../validators/bookingValidator');
@@ -82,5 +84,15 @@ module.exports = [
                 sanctumAuth
             ]
         }
+    },
+    {
+        method: 'GET',
+        path: '/bookings/{user_id}/user',
+        handler: getBookingsByUserId
+    },
+    {
+        method: 'POST',
+        path: '/booking/update-status',
+        handler: updateStatus
     }
 ];

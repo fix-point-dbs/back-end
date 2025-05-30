@@ -23,6 +23,17 @@ const getById = async (id) => {
     return booking;
 }
 
+const getAllByUserId = async (user_id) => {
+    const bookings = await Booking.findAll({ where: { user_id: user_id },
+        include: [
+            { model: Service },
+            { model: User,
+              attributes: { exclude: ['password'] }
+             }
+        ]});
+    return bookings;
+}
+
 const create = async (user_id ,data) => {
     const uploadDir = path.join(__dirname, '../uploads/photo-booking');
     if (!fs.existsSync(uploadDir)) {
@@ -112,8 +123,16 @@ const update = async (bookingId, data) => {
   return 'Success';
 };
 
-module.exports = { update };
-
+const updatedStatus = async (bookingId, data) => {
+    const booking = await Booking.findOne({ where: { id: bookingId} });
+    if (!booking) {
+        throw new Error('Data booking tidak ditemukan');
+    }
+    await booking.update({
+        status: data.status
+    });
+    return 'Success';
+}
 
 const destroy = async (booking_id) => {
     const booking = await Booking.destroy({ where: { id: booking_id } });
@@ -125,5 +144,7 @@ module.exports = {
     getById,
     create,
     update,
-    destroy
+    destroy,
+    getAllByUserId,
+    updatedStatus
 }
