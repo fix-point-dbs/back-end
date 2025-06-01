@@ -1,15 +1,44 @@
 const fs = require('fs');
 const path = require('path');
 const { Booking, Service, User } = require('../models');
-const getAll = async () => {
-    const bookings = await Booking.findAll({
-        include: [
-            { model: Service },
-            { model: User,
-              exclude: ['password']
-            }
-        ]});
-    return bookings;
+const { Op } = require('sequelize');
+const getAll = async ( request) => {
+  const { status, user_id, user_service_id } = request.query;
+  const where = {};
+  const include = [
+    {
+      model: Service
+    },
+    {
+      model: User,
+      attributes: { exclude: ['password'] }
+    }
+  ];
+  
+  // Filter berdasarkan user_id
+  if (user_id !== undefined) {
+    where.user_id = user_id;
+  }
+  
+
+  if (status === 'order') {
+    where.status = {
+      [Op.in]: ['pending', 'approved', 'in progress']
+    };
+  } else if (status !== undefined) {
+    where.status = status;
+  }
+  
+  // Jika user_service_id diberikan, filter service berdasarkan user_id
+  if (user_service_id !== undefined) {
+    include[0].where = { user_id: user_service_id };
+  }
+  
+  const bookings = await Booking.findAll({
+    where,
+    include
+  });
+  return bookings;
 }
 
 const getById = async (id) => {

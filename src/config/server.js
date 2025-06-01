@@ -1,8 +1,7 @@
 const Hapi = require('@hapi/hapi');
-const http = require('http');
-const { Server } = require('socket.io');
 const Inert = require('@hapi/inert');
 const Path = require('path');
+const { Server } = require('socket.io');
 
 // Route imports
 const userRoutes = require('../api/routes/userRoutes');
@@ -13,68 +12,55 @@ const authRoutes = require('../api/routes/authRoutes');
 const chatRoutes = require('../api/routes/chatRoutes');
 
 // Sequelize
-const { Chat, Message } = require('../models');
+const { Chat, Message, Booking } = require('../models');
 
 let io; // Socket.IO instance
 
 const createServer = async () => {
   const server = Hapi.server({
-    port: 3000,
-    host: 'localhost',
+    port: process.env.PORT || 3000,
+    host: '0.0.0.0',
     routes: {
       cors: {
         origin: ['*']
       },
       files: {
-        relativeTo: Path.join(__dirname, '../uploads') // direktori utama file
+        relativeTo: Path.join(__dirname, '../uploads')
       }
     }
   });
 
   await server.register(Inert);
- // ✅ PENTING! Serve folder uploads secara absolut
- server.route({
-  method: 'GET',
-  path: '/uploads/{folder}/{filename}', // contoh: /uploads/photo-services/foto1.jpg
-  handler: {
-    file: (request) => {
-      const { folder, filename } = request.params;
-      return `${folder}/${filename}`;
+
+  // Serve static files
+  server.route({
+    method: 'GET',
+    path: '/uploads/{folder}/{filename}',
+    handler: {
+      file: (request) => {
+        const { folder, filename } = request.params;
+        return `${folder}/${filename}`;
+      }
     }
-  }
-});
+  });
 
-//  server.route({
-//   method: 'GET',
-//   path: '/uploads/{param*}',
-//   handler: () => {
-//     return path.join(__dirname, '../uploads');
-//   }
-//   // handler: {
-//   //   directory: {
-//   //     path: path.join(__dirname, '../uploads/photo-services/asd.png'),
-//   //     index: false,
-//   //     listing: false
-//   //   }
-//   // }
-// });
-  // Serve static files in `/uploads` folder
+  // Register all routes
+  server.route([
+    ...userRoutes,
+    ...serviceRoutes,
+    ...bookingRoutes,
+    ...reviewRoutes,
+    ...authRoutes,
+    ...chatRoutes
+  ]);
 
-  // Daftarkan semua route
-  server.route(userRoutes);
-  server.route(serviceRoutes);
-  server.route(bookingRoutes);
-  server.route(reviewRoutes);
-  server.route(authRoutes);
-  server.route(chatRoutes);
- 
-  // Bungkus dengan http server
-  const listener = http.createServer(server.listener);
+  // Initialize server (tanpa start)
+  await server.initialize();
 
-  // Init Socket.IO
-  io = new Server(listener, {
+  // Init Socket.IO langsung dari server.listener (tanpa createServer)
+  io = new Server(server.listener, {
     cors: {
-      origin: "*", // ganti ke domain frontend di production
+      origin: "*",
       methods: ["GET", "POST"]
     }
   });
@@ -100,26 +86,29 @@ const createServer = async () => {
       io.to(`chat_${chat_id}`).emit('receive_message', newMessage);
     });
 
+    socket.on('join_booking', (booking_id) => {
+      socket.join(`booking_${booking_id}`);
+    });
+
+    socket.on('update_status_booking', async ({booking_id, status}) => {
+      const booking = await Booking.update({ status: status }, { where: { id: booking_id } });
+      const updateBooking = await Booking.findByPk(booking_id); // ambil data setelah update
+      io.to(`booking_${booking_id}`).emit('receive_status', updateBooking);
+    })
+
     socket.on('disconnect', () => {
       console.log('Socket disconnected:', socket.id);
     });
   });
 
-  // Start Hapi server (tanpa listener.listen di sini)
-  await server.initialize();
-
-  return { hapiServer: server, socketServer: listener };
+  return server;
 };
 
 // Untuk menjalankan server langsung
 const startServer = async () => {
-  const { hapiServer, socketServer } = await createServer();
-
+  const hapiServer = await createServer();
   await hapiServer.start();
-  socketServer.listen(3001, () => {
-    console.log(`🚀 Hapi server running at: ${hapiServer.info.uri}`);
-    console.log('⚡ Socket.IO server running at: http://localhost:3001');
-  });
+  console.log(`🚀 Hapi + Socket.IO server running at: ${hapiServer.info.uri}`);
 };
 
 module.exports = {

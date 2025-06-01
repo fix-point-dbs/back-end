@@ -8,13 +8,13 @@ const {
     updatedStatus
  } = require('../../services/bookingServices');
 const { success, error } = require('../../utils/ApiResponser');
-const {getUser} = require('../../utils/VerificationToken');
+const { getUser } = require('../../utils/VerificationToken');
 const getBookings = async (request, h) => {
     try {
-        const response = await getAll();
+        const response = await getAll(request);
         return h.response(success(response, 'Data berhasil diambil', 200)).code(200);
     } catch (err) {
-        return h.response(error({}, err, 500)).code(500);
+        return h.response(error({}, err.message, 500)).code(500);
     }
 }
 

@@ -88,11 +88,21 @@ module.exports = [
     {
         method: 'GET',
         path: '/bookings/{user_id}/user',
-        handler: getBookingsByUserId
+        handler: getBookingsByUserId,
+        options: {
+            pre: [
+                sanctumAuth
+            ]
+        }
     },
     {
-        method: 'POST',
-        path: '/booking/update-status',
-        handler: updateStatus
+        method: 'PUT',
+        path: '/bookings/{id}/update-status',
+        handler: updateStatus,
+        options: {
+            pre: [
+                sanctumAuth
+            ]
+        }
     }
 ];
