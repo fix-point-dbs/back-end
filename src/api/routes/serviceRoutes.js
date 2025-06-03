@@ -31,27 +31,6 @@ module.exports = [
           },
           pre: [
             sanctumAuth,
-            {
-              method: (request, h) => {
-                const payload = request.payload;
-          
-                const parseJSON = (fieldName) => {
-                  if (typeof payload[fieldName] === 'string') {
-                    try {
-                      payload[fieldName] = JSON.parse(payload[fieldName]);
-                    } catch (err) {
-                      throw Boom.badRequest(`Format ${fieldName} harus berupa JSON`);
-                    }
-                  }
-                };
-          
-                parseJSON('detailServices');
-                parseJSON('specialist');
-                parseJSON('photo');
-          
-                return h.continue;
-              }
-            }
           ],
           validate: {
             payload: servicePayloadSchema,

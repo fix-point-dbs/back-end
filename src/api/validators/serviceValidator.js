@@ -87,10 +87,8 @@ const servicePayloadSchema = Joi.object({
     'string.empty': 'Nomor telepon alternatif wajib diisi',
     'any.required': 'Nomor telepon alternatif wajib diisi'
   }),
-  detail_service_types: Joi.required(),
-  detail_service_descriptions: Joi.required(),
+  list_service_id: Joi.required(),
   specialist_names: Joi.required(),
-  specialist_descriptions: Joi.required(),
   photos: Joi.required(),
 });
 
