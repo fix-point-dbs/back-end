@@ -11,7 +11,7 @@ const reviewRoutes = require('../api/routes/reviewRoutes');
 const authRoutes = require('../api/routes/authRoutes');
 const chatRoutes = require('../api/routes/chatRoutes');
 const listServiceRoutes = require('../api/routes/listServiceRoutes');
-
+const mapRoutes = require('../api/routes/mapRoutes');
 // Sequelize
 const { Chat, Message, Booking } = require('../models');
 
@@ -53,7 +53,8 @@ const createServer = async () => {
     ...reviewRoutes,
     ...authRoutes,
     ...chatRoutes,
-    ...listServiceRoutes
+    ...listServiceRoutes,
+    ...mapRoutes
   ]);
 
   // Initialize server (tanpa start)
