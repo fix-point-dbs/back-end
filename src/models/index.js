@@ -132,5 +132,6 @@ module.exports = {
   Review,
   PersonalAccessToken,
   Chat,
-  Message
+  Message,
+  ListServices
 };

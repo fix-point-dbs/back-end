@@ -128,11 +128,10 @@ const create = async (user_id ,data) => {
     });
 
     
-    for(i = 0; i < detail_service_types.length; i++){
+    for(i = 0; i < list_service_id.length; i++){
         await DetailService.create({
             service_id: service.id,
-            type: detail_service_types[i],
-            description: detail_service_descriptions[i]
+            list_service_id: list_service_id[i],
         })
     }
 
