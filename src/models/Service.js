@@ -34,7 +34,7 @@ const Service = {
         allowNull: false
     },
     vehicle_type: {
-        type: DataTypes.ENUM('car', 'motorcycle','truck'),
+        type: DataTypes.ENUM('Mobil', 'Sepeda Motor','Truck', 'Semua Kendaraan'),
         allowNull: false
     },
     start_price_range: {
