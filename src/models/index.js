@@ -107,7 +107,7 @@ PersonalAccessToken.belongsTo(User, { foreignKey: 'id' });
 User.hasMany(Booking, { foreignKey: 'user_id' });
 Booking.belongsTo(User, { foreignKey: 'user_id' });
 ListServices.hasMany(DetailService, { foreignKey: 'list_service_id' });
-DetailService.belongsTo(ListServices, { foreignKey: 'id' });
+DetailService.belongsTo(ListServices, { foreignKey: 'list_service_id' });
 
 Chat.belongsTo(User, { as: 'user', foreignKey: 'user_id' });
 User.hasMany(Chat, { as: 'userChats', foreignKey: 'user_id' });

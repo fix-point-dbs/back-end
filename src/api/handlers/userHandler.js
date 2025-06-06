@@ -17,9 +17,9 @@ const getUserById = async (request, h) => {
 };
 
 const createUser = async (request, h) => {
-  const { name, email, password } = request.payload;
+  const { name, email, password, phone } = request.payload;
   try {
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, email, password, phone });
     return h.response({ status: 'success', data: { id: user.id, name, email } }).code(201);
   } catch (err) {
     console.error(err);
@@ -29,14 +29,14 @@ const createUser = async (request, h) => {
 
 const updateUser = async (request, h) => {
   const { id } = request.params;
-  const { name, email } = request.payload;
+  const { name, email, phone } = request.payload;
   const user = await User.findByPk(id);
 
   if (!user) {
     return h.response({ status: 'fail', message: 'User tidak ditemukan' }).code(404);
   }
 
-  await user.update({ name, email });
+  await user.update({ name, email, phone });
   return { status: 'success', message: 'User berhasil diperbarui' };
 };
 

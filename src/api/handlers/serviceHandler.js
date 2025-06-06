@@ -1,8 +1,8 @@
 const { success, error } = require('../../utils/ApiResponser');
-const { getAll, getById, getAllByType, create, update, destroy } = require('../../services/serviceServices');
+const { getAll, getById, create, update, destroy, updatedStatus } = require('../../services/serviceServices');
 const getServices = async (request, h) => {
     try {
-        const response = await getAll();
+        const response = await getAll(request);
         return h.response(success(response, 'Data berhasil diambil', 200)).code(200);
     } catch (err) {
         return h.response(error({}, err, 500)).code(500);
@@ -19,16 +19,6 @@ const getServiceById = async (request, h) => {
                 message: 'Service not found'
             }).code(404);
         }
-        return h.response(success(response, 'Data berhasil diambil', 200)).code(200);
-    } catch (err) {
-        return h.response(error({}, err, 500)).code(500);
-    }
-};
-
-const getServicesByType = async (request, h) => {
-    try {
-        const { type } = request.params;
-        const response = await getAllByType(type);
         return h.response(success(response, 'Data berhasil diambil', 200)).code(200);
     } catch (err) {
         return h.response(error({}, err, 500)).code(500);
@@ -65,11 +55,21 @@ const deleteService = async (request, h) => {
     }
 };
 
+const updateStatus = async (request, h) => {
+    try {
+        const { id } = request.params;
+        const response = await updatedStatus(id, request.payload);
+        return h.response(success(response, 'Data berhasil diupdate', 200)).code(200);
+    } catch (err) {
+        return h.response(error({}, err, 500)).code(500);
+    }
+};
+
 module.exports = {
     getServices,
     getServiceById,
     createService,
     updateService,
     deleteService,
-    getServicesByType
+    updateStatus
 };

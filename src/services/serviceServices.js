@@ -5,13 +5,23 @@ const {
   Specialist,
   Review,
   User,
+  ListServices
 } = require("../models");
 const { db } = require("../config/database");
 const fs = require("fs");
 const path = require("path");
 
-const getAll = async () => {
+const getAll = async (req) => {
+  const { status, type } = req.query;
+  const where = {};
+  if (status) {
+    where.status = status;
+  }
+  if (type) {
+    where.type = type;
+  }
   const services = await Service.findAll({
+    where,
     attributes: {
       include: [
         [
@@ -35,7 +45,10 @@ const getAll = async () => {
     include: [
       { model: Specialist },
       { model: Photo },
-      { model: DetailService },
+      { model: DetailService,
+        include: { model: ListServices,
+         attributes: ["type", "description"]
+         }},
     ],
   });
   return services;
@@ -67,7 +80,10 @@ const getById = async (id) => {
     include: [
       { model: Specialist },
       { model: Photo },
-      { model: DetailService },
+      { model: DetailService,
+        include: { model: ListServices,
+         attributes: ["type", "description"]
+         }},
       {
         model: Review,
         include: [
@@ -82,37 +98,6 @@ const getById = async (id) => {
   return service;
 };
 
-const getAllByType = async (type) => {
-  const services = await Service.findAll({
-    where: { type },
-    attributes: {
-      include: [
-        [
-          db.literal(`(
-                      SELECT AVG(rating)
-                      FROM reviews
-                      WHERE reviews.service_id = services.id
-                    )`),
-          "average_rating",
-        ],
-        [
-          db.literal(`(
-                      SELECT COUNT(*)
-                      FROM reviews
-                      WHERE reviews.service_id = services.id
-                    )`),
-          "review_count",
-        ],
-      ],
-    },
-    include: [
-      { model: Specialist },
-      { model: Photo },
-      { model: DetailService },
-    ],
-  });
-  return services;
-};
 
 const create = async (user_id, data) => {
   const {
@@ -137,6 +122,7 @@ const create = async (user_id, data) => {
     opening_time: data.opening_time,
     closing_time: data.closing_time,
     alternative_phone: data.alternative_phone,
+    status: data.status,
   });
 
   const listServiceArray = list_service_id.split(",").map((id) => id.trim());
@@ -190,7 +176,7 @@ const create = async (user_id, data) => {
     });
   }
 
-  return "berhasil";
+  return service;
 };
 
 const update = async (service_id, data) => {
@@ -233,11 +219,21 @@ const destroy = async (service_id) => {
   return "berhasil";
 };
 
+const updatedStatus = async (service_id, status) => {
+  await Service.update(
+    {
+      status: status,
+    },
+    { where: { id: service_id } }
+  );
+  return "berhasil";
+}
+
 module.exports = {
   getAll,
   getById,
-  getAllByType,
   create,
   update,
   destroy,
+  updatedStatus
 };

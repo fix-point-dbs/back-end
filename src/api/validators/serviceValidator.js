@@ -73,14 +73,14 @@ const servicePayloadSchema = Joi.object({
     'boolean.base': 'Full operational harus berupa true atau false',
     'any.required': 'Status full operational wajib diisi'
   }),
-  opening_time: Joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/).required().messages({
+  opening_time: Joi.string().required().messages({
     'string.empty': 'Jam buka wajib diisi',
-    'string.pattern.base': 'Format jam buka harus HH:MM:SS',
+    // 'string.pattern.base': 'Format jam buka harus HH:MM:SS',
     'any.required': 'Jam buka wajib diisi'
   }),
-  closing_time: Joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/).required().messages({
+  closing_time: Joi.string().required().messages({
     'string.empty': 'Jam tutup wajib diisi',
-    'string.pattern.base': 'Format jam tutup harus HH:MM:SS',
+    // 'string.pattern.base': 'Format jam tutup harus HH:MM:SS',
     'any.required': 'Jam tutup wajib diisi'
   }),
   alternative_phone: Joi.string().required().messages({
@@ -90,6 +90,10 @@ const servicePayloadSchema = Joi.object({
   list_service_id: Joi.required(),
   specialist_names: Joi.required(),
   photos: Joi.required(),
+  status: Joi.string().required().messages({
+    'string.empty': 'Status wajib diisi',
+    'any.required': 'Status wajib diisi'
+  }),
 });
 
 

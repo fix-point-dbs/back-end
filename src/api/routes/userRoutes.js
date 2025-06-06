@@ -19,32 +19,16 @@ module.exports = [
     path: '/users/{id}',
     handler: getUserById
   },
-  // {
-  //   method: 'POST',
-  //   path: '/users',
-  //   handler: createUser,
-  //   options: {
-  //     validate: {
-  //       payload: userPayloadSchema,
-  //       failAction: (request, h, err) => {
-  //         return h.response({ status: 'fail', message: err.message }).code(400).takeover();
-  //       }
-  //     }
-  //   }
-  // },
-  // {
-  //   method: 'PUT',
-  //   path: '/users/{id}',
-  //   handler: updateUser,
-  //   options: {
-  //     validate: {
-  //       payload: userPayloadSchema,
-  //       failAction: (request, h, err) => {
-  //         return h.response({ status: 'fail', message: err.message }).code(400).takeover();
-  //       }
-  //     }
-  //   }
-  // },
+  {
+    method: 'POST',
+    path: '/users',
+    handler: createUser,
+  },
+  {
+    method: 'PUT',
+    path: '/users/{id}',
+    handler: updateUser
+  },
   {
     method: 'DELETE',
     path: '/users/{id}',

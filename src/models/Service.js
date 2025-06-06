@@ -64,6 +64,10 @@ const Service = {
     alternative_phone: {
         type: DataTypes.STRING
     },
+    status:{
+        type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+        allowNull: false
+    }
 };
 
 module.exports = Service;
