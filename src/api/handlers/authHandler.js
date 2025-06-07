@@ -6,7 +6,7 @@ const register = async (request, h) => {
     const user = await registerService('user',request.payload);
     return h.response(success(user, 'success', 201)).code(201);
   } catch (err) {
-    return h.response(error({}, err, 500)).code(500);
+    return h.response(error({}, err.message, 500)).code(500);
   }
 };
 

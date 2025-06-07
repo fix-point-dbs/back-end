@@ -10,16 +10,17 @@ const {
 const { db } = require("../config/database");
 const fs = require("fs");
 const path = require("path");
+const { getDistance } = require('geolib');
+
+const AVERAGE_SPEED_KMH = 40; // rata-rata kecepatan kendaraan di kota
 
 const getAll = async (req) => {
-  const { status, type } = req.query;
+  const { status, type, lat, lng } = req.query;
+
   const where = {};
-  if (status) {
-    where.status = status;
-  }
-  if (type) {
-    where.type = type;
-  }
+  if (status) where.status = status;
+  if (type) where.type = type;
+
   const services = await Service.findAll({
     where,
     attributes: {
@@ -45,14 +46,43 @@ const getAll = async (req) => {
     include: [
       { model: Specialist },
       { model: Photo },
-      { model: DetailService,
-        include: { model: ListServices,
-         attributes: ["type", "description"]
-         }},
+      {
+        model: DetailService,
+        include: {
+          model: ListServices,
+          attributes: ["type", "description"]
+        },
+      },
     ],
   });
-  return services;
+
+  // Jika koordinat dikirim, hitung jarak dan waktu tempuh
+  const enrichedServices = (lat && lng)
+    ? services.map(service => {
+        const serviceLat = service.latitude;
+        const serviceLng = service.longitude;
+
+        if (!serviceLat || !serviceLng) return service; // jika data tidak lengkap, skip perhitungan
+
+        const distanceMeters = getDistance(
+          { latitude: parseFloat(lat), longitude: parseFloat(lng) },
+          { latitude: serviceLat, longitude: serviceLng }
+        );
+
+        const distanceKm = distanceMeters / 1000;
+        const estimatedTimeMinutes = (distanceKm / AVERAGE_SPEED_KMH) * 60;
+
+        return {
+          ...service.toJSON(),
+          distance: parseFloat(distanceKm.toFixed(2)), // km
+          estimated_time: Math.ceil(estimatedTimeMinutes), // menit
+        };
+      })
+    : services.map(service => service.toJSON()); // tanpa hitung jarak
+
+  return enrichedServices;
 };
+
 
 const getById = async (id) => {
   const service = await Service.findOne({
@@ -235,5 +265,5 @@ module.exports = {
   create,
   update,
   destroy,
-  updatedStatus
+  updatedStatus,
 };
