@@ -11,15 +11,21 @@ const { db } = require("../config/database");
 const fs = require("fs");
 const path = require("path");
 const { getDistance } = require('geolib');
+const { Op } = require('sequelize');
 
-const AVERAGE_SPEED_KMH = 40; // rata-rata kecepatan kendaraan di kota
+const AVERAGE_SPEED_KMH = 40; 
 
 const getAll = async (req) => {
-  const { status, type, lat, lng } = req.query;
+  const { status, type, lat, lng, page = 1, limit = 10, maxDistance, city } = req.query;
 
   const where = {};
   if (status) where.status = status;
   if (type) where.type = type;
+  if (city) {
+    where.address = {
+      [Op.like]: `%${city}%`
+    };
+  }
 
   const services = await Service.findAll({
     where,
@@ -27,18 +33,18 @@ const getAll = async (req) => {
       include: [
         [
           db.literal(`(
-                      SELECT AVG(rating)
-                      FROM reviews
-                      WHERE reviews.service_id = services.id
-                    )`),
+            SELECT AVG(rating)
+            FROM reviews
+            WHERE reviews.service_id = services.id
+          )`),
           "average_rating",
         ],
         [
           db.literal(`(
-                      SELECT COUNT(*)
-                      FROM reviews
-                      WHERE reviews.service_id = services.id
-                    )`),
+            SELECT COUNT(*)
+            FROM reviews
+            WHERE reviews.service_id = services.id
+          )`),
           "review_count",
         ],
       ],
@@ -59,14 +65,19 @@ const getAll = async (req) => {
   let enrichedServices;
 
   if (lat && lng) {
+    const userLocation = {
+      latitude: parseFloat(lat),
+      longitude: parseFloat(lng)
+    };
+
     enrichedServices = services.map(service => {
       const serviceLat = service.latitude;
       const serviceLng = service.longitude;
 
-      if (!serviceLat || !serviceLng) return service.toJSON(); // fallback
+      if (!serviceLat || !serviceLng) return service.toJSON();
 
       const distanceMeters = getDistance(
-        { latitude: parseFloat(lat), longitude: parseFloat(lng) },
+        userLocation,
         { latitude: serviceLat, longitude: serviceLng }
       );
 
@@ -80,13 +91,23 @@ const getAll = async (req) => {
       };
     });
 
-    // Urutkan berdasarkan jarak terdekat
+    if (maxDistance) {
+      const maxKm = parseFloat(maxDistance);
+      enrichedServices = enrichedServices.filter(service => service.distance <= maxKm);
+    }
+
     enrichedServices.sort((a, b) => a.distance - b.distance);
   } else {
     enrichedServices = services.map(service => service.toJSON());
   }
 
-  return enrichedServices;
+  // Pagination
+  const pageNumber = parseInt(page);
+  const limitNumber = parseInt(limit);
+  const offset = (pageNumber - 1) * limitNumber;
+  const paginatedData = enrichedServices.slice(offset, offset + limitNumber);
+
+  return paginatedData;
 };
 
 
