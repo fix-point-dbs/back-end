@@ -56,29 +56,35 @@ const getAll = async (req) => {
     ],
   });
 
-  // Jika koordinat dikirim, hitung jarak dan waktu tempuh
-  const enrichedServices = (lat && lng)
-    ? services.map(service => {
-        const serviceLat = service.latitude;
-        const serviceLng = service.longitude;
+  let enrichedServices;
 
-        if (!serviceLat || !serviceLng) return service; // jika data tidak lengkap, skip perhitungan
+  if (lat && lng) {
+    enrichedServices = services.map(service => {
+      const serviceLat = service.latitude;
+      const serviceLng = service.longitude;
 
-        const distanceMeters = getDistance(
-          { latitude: parseFloat(lat), longitude: parseFloat(lng) },
-          { latitude: serviceLat, longitude: serviceLng }
-        );
+      if (!serviceLat || !serviceLng) return service.toJSON(); // fallback
 
-        const distanceKm = distanceMeters / 1000;
-        const estimatedTimeMinutes = (distanceKm / AVERAGE_SPEED_KMH) * 60;
+      const distanceMeters = getDistance(
+        { latitude: parseFloat(lat), longitude: parseFloat(lng) },
+        { latitude: serviceLat, longitude: serviceLng }
+      );
 
-        return {
-          ...service.toJSON(),
-          distance: parseFloat(distanceKm.toFixed(2)), // km
-          estimated_time: Math.ceil(estimatedTimeMinutes), // menit
-        };
-      })
-    : services.map(service => service.toJSON()); // tanpa hitung jarak
+      const distanceKm = distanceMeters / 1000;
+      const estimatedTimeMinutes = (distanceKm / AVERAGE_SPEED_KMH) * 60;
+
+      return {
+        ...service.toJSON(),
+        distance: parseFloat(distanceKm.toFixed(2)),
+        estimated_time: Math.ceil(estimatedTimeMinutes),
+      };
+    });
+
+    // Urutkan berdasarkan jarak terdekat
+    enrichedServices.sort((a, b) => a.distance - b.distance);
+  } else {
+    enrichedServices = services.map(service => service.toJSON());
+  }
 
   return enrichedServices;
 };
