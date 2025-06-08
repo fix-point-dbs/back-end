@@ -33,6 +33,7 @@ const loginService = async (data) => {
     await PersonalAccessToken.create({ token, user_id: user.id, expiresAt });
 
     const res = {
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,

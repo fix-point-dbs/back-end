@@ -5,7 +5,7 @@ const {
   updateUser,
   deleteUser
 } = require('../handlers/userHandler');
-
+const sanctumAuth = require('../middleware/sanctumAuth');
 // const { userPayloadSchema } = require('../validators/userValidator');
 
 module.exports = [
@@ -32,6 +32,11 @@ module.exports = [
   {
     method: 'DELETE',
     path: '/users/{id}',
-    handler: deleteUser
+    handler: deleteUser,
+    options: {
+      pre: [
+        sanctumAuth
+      ]
+    }
   }
 ];

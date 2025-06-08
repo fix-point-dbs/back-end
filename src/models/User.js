@@ -15,7 +15,7 @@ const User ={
     allowNull: false
   },
   role: {
-    type: DataTypes.ENUM('admin', 'user'),
+    type: DataTypes.ENUM('admin', 'user', 'mitra'),
     allowNull: false
   },
     phone: {

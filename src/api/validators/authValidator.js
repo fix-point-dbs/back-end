@@ -6,7 +6,8 @@ const registerPayloadSchema = Joi.object({
     password: Joi.string().required(),
     phone: Joi.string().required().messages({
         'phone.required': 'Phone harus wajib di isi'
-    })
+    }),
+    role: Joi.string().required()
 });
 
 const loginPayloadSchema = Joi.object({

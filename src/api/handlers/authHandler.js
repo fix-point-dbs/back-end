@@ -13,9 +13,9 @@ const register = async (request, h) => {
 const login = async (request, h) => {
   try {
     const login = await loginService(request.payload);
-    return h.response(success({ login }, 'Login berhasil', 200)).code(200);
+    return h.response(success(login, 'Login berhasil', 200)).code(200);
     } catch (err) {
-        return h.response(error({}, err, 500)).code(500);
+        return h.response(error({}, err.message, 500)).code(500);
     }
 };
 
