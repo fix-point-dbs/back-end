@@ -1,4 +1,4 @@
-const { getServices, getServiceById, getServicesByType, createService, updateService, deleteService, updateStatus } = require('../handlers/serviceHandler');
+const { getServices, getServiceById, getServicesByType, createService, updateService, deleteService, updateStatus, getServicesByUserId } = require('../handlers/serviceHandler');
 const { servicePayloadSchema } = require('../validators/serviceValidator');
 const sanctumAuth = require('../middleware/sanctumAuth');
 const { error } = require('../../utils/ApiResponser');
@@ -12,6 +12,11 @@ module.exports = [
         method: 'GET',
         path: '/services/{id}',
         handler: getServiceById
+    },
+    {
+        method: 'GET',
+        path: '/services/{user_id}/user',
+        handler: getServicesByUserId
     },
     {
         method: 'POST',

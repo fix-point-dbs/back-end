@@ -47,16 +47,25 @@ const statistics = async (request, h) => {
 
 const getMonthlyBookingStats = async (request, h) => {
   try {
+    const { service_id } = request.query; // ambil dari query
+
+    const whereCondition = {
+      created_at: {
+        [db.Sequelize.Op.gte]: db.Sequelize.literal("DATE_SUB(NOW(), INTERVAL 6 MONTH)")
+      }
+    };
+
+    // Tambahkan filter berdasarkan service_id jika ada
+    if (service_id) {
+      whereCondition.service_id = service_id;
+    }
+
     const results = await Booking.findAll({
       attributes: [
         [db.Sequelize.fn('DATE_FORMAT', db.Sequelize.col('created_at'), '%Y-%m'), 'year_month'],
         [db.Sequelize.fn('COUNT', db.Sequelize.col('id')), 'total']
       ],
-      where: db.Sequelize.where(
-        db.Sequelize.col('created_at'),
-        '>=',
-        db.Sequelize.literal("DATE_SUB(NOW(), INTERVAL 6 MONTH)")
-      ),
+      where: whereCondition,
       group: ['year_month'],
       order: [[db.Sequelize.fn('DATE_FORMAT', db.Sequelize.col('created_at'), '%Y-%m'), 'DESC']],
       limit: 6,
@@ -77,6 +86,7 @@ const getMonthlyBookingStats = async (request, h) => {
     console.error(err);
     return h.response(error({}, err, 500)).code(500);
   }
-}
+};
+
 
 module.exports = {statistics, getMonthlyBookingStats};

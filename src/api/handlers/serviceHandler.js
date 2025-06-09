@@ -1,5 +1,5 @@
 const { success, error } = require('../../utils/ApiResponser');
-const { getAll, getById, create, update, destroy, updatedStatus } = require('../../services/serviceServices');
+const { getAll, getById, create, update, destroy, updatedStatus, getAllByUserId } = require('../../services/serviceServices');
 const getServices = async (request, h) => {
     try {
         const response = await getAll(request);
@@ -25,10 +25,19 @@ const getServiceById = async (request, h) => {
     }
 };
 
+const getServicesByUserId = async (request, h) => {
+    try {
+        const { user_id } = request.params;
+        const response = await getAllByUserId(user_id);
+        return h.response(success(response, 'Data berhasil diambil', 200)).code(200);
+    } catch (err) {
+        return h.response(error({}, err, 500)).code(500);
+    }
+};
+
 const createService = async (request, h) => {
     try {
-        const user_id = 1;
-        const response = await create(user_id, request.payload);
+        const response = await create(request.payload);
         return h.response(success(response, 'Data berhasil dibuat', 201)).code(201);
     } catch (err) {
         return h.response(error({}, err, 500)).code(500);
@@ -72,4 +81,5 @@ module.exports = {
     updateService,
     deleteService,
     updateStatus,
+    getServicesByUserId
 };

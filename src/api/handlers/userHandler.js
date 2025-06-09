@@ -1,5 +1,6 @@
 const { User } = require("../../models");
 const { success, error } = require("../../utils/ApiResponser");
+const bcrypt = require('bcrypt');
 const getUsers = async (request, h) => {
   try {
     const users = await User.findAll();
@@ -45,7 +46,9 @@ const updateUser = async (request, h) => {
   try {
     const { id } = request.params;
     const { name, email, phone } = request.payload;
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, {
+      attributes: { exclude: ["password"] },
+    });
 
     if (!user) {
       return h
@@ -54,10 +57,36 @@ const updateUser = async (request, h) => {
     }
 
     await user.update({ name, email, phone });
+    
 
     return h.response(success(user, "User berhasil diperbarui", 200)).code(200);
   } catch (error) {
     return h.response(error({}, error.message, 500)).code(500);
+  }
+};
+
+const changePassword = async (request, h) => {
+  try {
+    const { id } = request.params;
+    const { oldPassword, newPassword } = request.payload;
+    const user = await User.findByPk(id);
+
+    if(!await bcrypt.compare(oldPassword, user.password)) {
+      return h.response({ status: "fail", message: "Password salah" }).code(400);
+    }
+
+
+    if (!user) {
+      return h
+        .response({ status: "fail", message: "User tidak ditemukan" })
+        .code(404);
+    }
+
+    await user.update({ password: await bcrypt.hash(newPassword, 10) });
+
+    return h.response(success(user, "Password berhasil diperbarui", 200)).code(200);
+  } catch (err) {
+    return h.response(error({}, err.message, 500)).code(500);
   }
 };
 
@@ -81,4 +110,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  changePassword
 };

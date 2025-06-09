@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const { User, PersonalAccessToken } = require('../models');
 const { name } = require('../models/User');
 
-const registerService = async (role ,data) => {
+const registerService = async (data) => {
     const checkPhone = await User.findAll({ where: { phone: data.phone }});
     const checkEmail = await User.findAll({ where: { email: data.email } })
     if(checkPhone.length > 0) throw new Error('Nomor telepon sudah terdaftar');
@@ -13,7 +13,7 @@ const registerService = async (role ,data) => {
          name: data.name, 
          email: data.email, 
          password: hashedPassword, 
-         role: role, 
+         role: data.role, 
          phone: data.phone 
     });
     return user;

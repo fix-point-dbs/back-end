@@ -3,7 +3,8 @@ const {
   getUserById,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  changePassword
 } = require('../handlers/userHandler');
 const sanctumAuth = require('../middleware/sanctumAuth');
 // const { userPayloadSchema } = require('../validators/userValidator');
@@ -28,6 +29,11 @@ module.exports = [
     method: 'PUT',
     path: '/users/{id}',
     handler: updateUser
+  },
+  {
+    method: 'PUT',
+    path: '/users/{id}/change-password',
+    handler: changePassword
   },
   {
     method: 'DELETE',

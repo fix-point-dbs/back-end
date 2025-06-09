@@ -3,7 +3,7 @@ const { success, error } = require('../../utils/ApiResponser');
 
 const register = async (request, h) => {
   try {
-    const user = await registerService('user',request.payload);
+    const user = await registerService(request.payload);
     return h.response(success(user, 'success', 201)).code(201);
   } catch (err) {
     return h.response(error({}, err.message, 500)).code(500);

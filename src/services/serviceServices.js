@@ -155,6 +155,13 @@ const getById = async (id) => {
   return service;
 };
 
+const getAllByUserId = async (user_id) => {
+    const services = await Service.findAll({
+        where: { user_id: user_id },
+    })
+    return services
+}
+
 
 const create = async (user_id, data) => {
   const {
@@ -163,7 +170,7 @@ const create = async (user_id, data) => {
     photos,
   } = data;
   const service = await Service.create({
-    user_id: user_id,
+    user_id: data.user_id,
     bussiness_name: data.bussiness_name,
     person_responsible: data.person_responsible,
     description: data.description,
@@ -293,4 +300,5 @@ module.exports = {
   update,
   destroy,
   updatedStatus,
+  getAllByUserId
 };
