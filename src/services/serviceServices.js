@@ -163,7 +163,7 @@ const getAllByUserId = async (user_id) => {
 }
 
 
-const create = async (user_id, data) => {
+const create = async (data) => {
   const {
     list_service_id,
     specialist_names,
@@ -212,7 +212,7 @@ const create = async (user_id, data) => {
     )
   );
 
-  const uploadDir = path.join(__dirname, "../../uploads/photo-services");
+  const uploadDir = path.join(__dirname, "../uploads/photo-services");
 
   // Pastikan folder ada
   if (!fs.existsSync(uploadDir)) {

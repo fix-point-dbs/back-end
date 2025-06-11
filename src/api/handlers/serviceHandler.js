@@ -40,7 +40,7 @@ const createService = async (request, h) => {
         const response = await create(request.payload);
         return h.response(success(response, 'Data berhasil dibuat', 201)).code(201);
     } catch (err) {
-        return h.response(error({}, err, 500)).code(500);
+        return h.response(error({}, err.message, 500)).code(500);
     }
 };
 

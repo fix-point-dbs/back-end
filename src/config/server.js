@@ -26,6 +26,9 @@ const createServer = async () => {
       cors: {
         origin: ['*']
       },
+      payload: {
+        maxBytes: 5000000
+      },
       files: {
         relativeTo: Path.join(__dirname, '../uploads')
       }
