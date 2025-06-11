@@ -106,7 +106,7 @@ Jika belum, Anda bisa download melalui link berikut:
 
 ## Production
 
-jika ingin melihat langsung back-end nya langsung bisa melihat link berikut
-👉 [Link Production](https://backend-fixpoint.adza-zarif.my.id)
+jika ingin melihat langsung hasilnya tanpa harus mendowload dulu langsung bisa melihat link berikut
+👉 [Link Production](https://fixpoint.adza-zarif.my.id)
 
 💡 **Terima kasih telah menggunakan Fix Point DBS!  
