@@ -47,7 +47,7 @@ npm install -g nodemon
 ### 5. Download & Import Database
 
 - Silakan download file database SQL melalui link berikut:  
-  👉 [Download Database](https://drive.com/xxxxxxx)
+  👉 [Download Database](https://drive.google.com/drive/folders/1UgrGjnoJ180-U0saWaWCU_RqGN36DTeG?usp=sharing)
 
 - Buka **phpMyAdmin**, lalu:
   1. Buat database baru dengan nama: `fix_point`
@@ -91,7 +91,7 @@ http://localhost:3000/
 ## 📮 Dokumentasi API
 
 Untuk melihat dokumentasi API, Anda dapat menggunakan koleksi Postman berikut:  
-👉 [Download Postman Collection](https://drive.com/xxx)
+👉 [Download Postman Collection](https://drive.google.com/drive/folders/1UgrGjnoJ180-U0saWaWCU_RqGN36DTeG?usp=sharing)
 
 ---
 
