@@ -16,7 +16,7 @@ const { Op } = require('sequelize');
 const AVERAGE_SPEED_KMH = 40; 
 
 const getAll = async (req) => {
-  const { status, type, lat, lng, page = 1, limit = 10, maxDistance, city } = req.query;
+  const { status, type, lat, lng, page = 1, limit = 15, maxDistance, city } = req.query;
 
   const where = {};
   if (status) where.status = status;
